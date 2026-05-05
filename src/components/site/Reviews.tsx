@@ -1,9 +1,12 @@
 import { BUSINESS } from "@/config/business";
+import sarahImg from "@/assets/review-sarah.jpg";
+import jamesImg from "@/assets/review-james.jpg";
+import mikeImg from "@/assets/review-mike.jpg";
 
 const REVIEWS = [
-  { name: "Sarah M.", text: "DiAntonio's was at my house within hours of calling. They removed everything quickly, professionally, and left the space spotless. I'll be calling them for every project going forward." },
-  { name: "James R.", text: "Great experience start to finish. Fair quote, showed up on time, and got the job done faster than I expected. Highly recommend for anyone needing demo or hauling work." },
-  { name: "Mike T.", text: "These guys are the real deal. Licensed, insured, and they actually clean up after themselves. Used them for a full basement cleanout — couldn't be happier." },
+  { name: "Sarah M.", img: sarahImg, text: "DiAntonio's was at my house within hours of calling. They removed everything quickly, professionally, and left the space spotless. I'll be calling them for every project going forward." },
+  { name: "James R.", img: jamesImg, text: "Great experience start to finish. Fair quote, showed up on time, and got the job done faster than I expected. Highly recommend for anyone needing demo or hauling work." },
+  { name: "Mike T.", img: mikeImg, text: "These guys are the real deal. Licensed, insured, and they actually clean up after themselves. Used them for a full basement cleanout — couldn't be happier." },
 ];
 
 export const Reviews = () => (
@@ -20,8 +23,13 @@ export const Reviews = () => (
                onMouseLeave={(e) => (e.currentTarget.style.borderTopColor = "hsl(var(--steel))")}>
             <div className="text-gold" style={{ fontSize: 16 }}>⭐⭐⭐⭐⭐</div>
             <p className="text-fog mt-4 italic" style={{ fontSize: 14, lineHeight: 1.8 }}>"{r.text}"</p>
-            <div className="text-chalk mt-4" style={{ fontWeight: 600, fontSize: 14 }}>{r.name}</div>
-            <div style={{ fontSize: 12, color: "#6a6058" }}>— Google Review</div>
+            <div className="flex items-center gap-3 mt-5">
+              <img src={r.img} alt={r.name} loading="lazy" width={512} height={512} className="w-11 h-11 object-cover rounded-full" />
+              <div>
+                <div className="text-chalk" style={{ fontWeight: 600, fontSize: 14 }}>{r.name}</div>
+                <div style={{ fontSize: 12, color: "#6a6058" }}>— Google Review</div>
+              </div>
+            </div>
           </div>
         ))}
       </div>
