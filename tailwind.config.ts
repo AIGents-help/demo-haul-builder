@@ -19,6 +19,16 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        ink: "hsl(var(--ink))",
+        iron: "hsl(var(--iron))",
+        steel: "hsl(var(--steel))",
+        fire: "hsl(var(--fire))",
+        ember: "hsl(var(--ember))",
+        gold: "hsl(var(--gold))",
+        chalk: "hsl(var(--chalk))",
+        fog: "hsl(var(--fog))",
+        "avail-green": "hsl(var(--avail-green))",
+        "avail-red": "hsl(var(--avail-red))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -57,6 +67,11 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+      },
+      fontFamily: {
+        display: ['"Bebas Neue"', 'Impact', 'sans-serif'],
+        body: ['"Barlow"', 'system-ui', 'sans-serif'],
+        condensed: ['"Barlow Condensed"', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
