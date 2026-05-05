@@ -2,41 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* DiAntonio's Demo & Hauling design system. HSL only. */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Brand palette */
+    --ink:    0 0% 5%;        /* #0D0D0D */
+    --iron:   0 0% 11%;       /* #1C1C1C */
+    --steel:  0 0% 16%;       /* #2A2A2A */
+    --fire:   21 91% 47%;     /* #E85D0A */
+    --ember:  21 86% 56%;     /* #F07230 */
+    --gold:   43 86% 46%;     /* #D4A017 */
+    --chalk:  37 27% 92%;     /* #F0ECE4 */
+    --fog:    32 9% 59%;      /* #A09890 */
+    --avail-green: 142 71% 45%;
+    --avail-red:   0 72% 51%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    /* Semantic mappings */
+    --background: var(--ink);
+    --foreground: var(--chalk);
+    --card: var(--iron);
+    --card-foreground: var(--chalk);
+    --popover: var(--iron);
+    --popover-foreground: var(--chalk);
+    --primary: var(--fire);
+    --primary-foreground: 0 0% 100%;
+    --secondary: var(--steel);
+    --secondary-foreground: var(--chalk);
+    --muted: var(--steel);
+    --muted-foreground: var(--fog);
+    --accent: var(--fire);
+    --accent-foreground: 0 0% 100%;
+    --destructive: var(--avail-red);
+    --destructive-foreground: 0 0% 100%;
+    --border: var(--steel);
+    --input: var(--steel);
+    --ring: var(--fire);
+    --radius: 0px;
 
     --sidebar-background: 0 0% 98%;
 
@@ -99,7 +101,78 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-family: 'Barlow', system-ui, sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    color: hsl(var(--fog));
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    letter-spacing: 2px;
+    color: hsl(var(--chalk));
+  }
+
+  .font-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: hsl(var(--fire));
+    font-weight: 600;
+  }
+
+  .font-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+  }
+}
+
+@layer utilities {
+  .hero-texture {
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.015) 40px,
+      rgba(255,255,255,0.015) 41px
+    );
+  }
+
+  .text-fog { color: hsl(var(--fog)); }
+  .text-chalk { color: hsl(var(--chalk)); }
+  .text-fire { color: hsl(var(--fire)); }
+  .text-gold { color: hsl(var(--gold)); }
+  .bg-ink { background-color: hsl(var(--ink)); }
+  .bg-iron { background-color: hsl(var(--iron)); }
+  .bg-steel { background-color: hsl(var(--steel)); }
+  .bg-fire { background-color: hsl(var(--fire)); }
+  .bg-ember { background-color: hsl(var(--ember)); }
+  .border-fire { border-color: hsl(var(--fire)); }
+  .border-steel { border-color: hsl(var(--steel)); }
+}
+
+@keyframes pulse-cta {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--fire) / 0.4); }
+  50% { transform: scale(1.02); box-shadow: 0 0 0 12px hsl(var(--fire) / 0); }
+}
+.animate-pulse-cta { animation: pulse-cta 2.5s infinite; }
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+.pulse-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  animation: dot-pulse 2s infinite;
+  display: inline-block;
   }
 }
