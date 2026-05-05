@@ -34,10 +34,11 @@ export const PhotoToQuote = () => (
           </div>
           <a
             href={`sms:${BUSINESS.phoneTel}`}
-            className="font-display text-fire block mt-2"
-            style={{ fontSize: 52 }}
+            className="font-display text-white bg-fire hover:bg-ember block mt-3 py-4 px-4 underline-offset-4 transition-colors"
+            style={{ fontSize: 40, lineHeight: 1.1 }}
           >
-            {BUSINESS.phone}
+            📱 TAP TO TEXT<br />
+            <span style={{ fontSize: 32 }}>{BUSINESS.phone}</span>
           </a>
           <p className="text-fog mt-2" style={{ fontSize: 13, lineHeight: 1.7 }}>
             Include your ZIP code and what service you need. We'll respond with a ballpark price within 15 minutes during business hours.
