@@ -51,10 +51,12 @@ export const QuoteForm = () => {
       if (dbError) throw dbError;
 
       try {
-        await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-quote-notification`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(parsed.data),
+        await supabase.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "quote-request",
+            recipientEmail: "contact@diantoniosdemo.com",
+            templateData: { ...parsed.data, source: "website" },
+          },
         });
       } catch (_) { /* notification optional */ }
 
