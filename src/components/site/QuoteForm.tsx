@@ -54,7 +54,7 @@ export const QuoteForm = () => {
         await supabase.functions.invoke("send-transactional-email", {
           body: {
             templateName: "quote-request",
-            recipientEmail: "contact@diantoniosdemo.com",
+            recipientEmail: "coreydiantonio18@icloud.com",
             templateData: { ...parsed.data, source: "website" },
           },
         });
