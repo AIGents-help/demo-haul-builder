@@ -1,37 +1,46 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { Toaster } from "@/components/ui/sonner";
+import { Lead, Job } from "@/components/dashboard/types";
+import { HomeTab } from "@/components/dashboard/HomeTab";
+import { LeadsTab } from "@/components/dashboard/LeadsTab";
+import { JobsTab } from "@/components/dashboard/JobsTab";
+import { CustomersTab } from "@/components/dashboard/CustomersTab";
+import { SettingsTab } from "@/components/dashboard/SettingsTab";
 
-type Quote = {
-  id: string; created_at: string; name: string; phone: string;
-  service: string | null; zip: string | null; message: string | null; source: string | null;
+type Tab = "home" | "leads" | "jobs" | "customers" | "settings";
+
+const greeting = () => {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 11) return "Good morning, Corey ⚡";
+  if (h >= 11 && h < 17) return "Good afternoon, Corey ⚡";
+  if (h >= 17 && h < 21) return "Good evening, Corey ⚡";
+  return "Still working? 💪";
 };
 
-type EmailLog = {
-  message_id: string | null; template_name: string; recipient_email: string;
-  status: string; error_message: string | null; created_at: string;
-};
+const todayLabel = () =>
+  new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
 
-const STATUS_COLORS: Record<string, string> = {
-  sent: "hsl(var(--avail-green))",
-  pending: "hsl(var(--steel))",
-  failed: "hsl(var(--avail-red))",
-  dlq: "hsl(var(--avail-red))",
-  suppressed: "#caa84a",
-  bounced: "hsl(var(--avail-red))",
-  complained: "hsl(var(--avail-red))",
-};
+const NAV: { id: Tab; icon: string; label: string }[] = [
+  { id: "home", icon: "🏠", label: "Home" },
+  { id: "leads", icon: "📋", label: "Leads" },
+  { id: "jobs", icon: "🔨", label: "Jobs" },
+  { id: "customers", icon: "👥", label: "Customers" },
+  { id: "settings", icon: "⚙️", label: "Settings" },
+];
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [authChecked, setAuthChecked] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [email, setEmail] = useState<string>("");
-  const [tab, setTab] = useState<"quotes" | "emails">("quotes");
-  const [quotes, setQuotes] = useState<Quote[]>([]);
-  const [emails, setEmails] = useState<EmailLog[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [email, setEmail] = useState("");
+  const [tab, setTab] = useState<Tab>("home");
+  const [leadFilter, setLeadFilter] = useState<string | undefined>();
+  const [jobFilter, setJobFilter] = useState<string | undefined>();
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const check = async () => {
@@ -40,8 +49,7 @@ const Dashboard = () => {
       setEmail(s.session.user.email ?? "");
       const { data: roles } = await supabase
         .from("user_roles").select("role").eq("user_id", s.session.user.id);
-      const admin = !!roles?.some((r) => r.role === "admin");
-      setIsAdmin(admin);
+      setIsAdmin(!!roles?.some((r) => r.role === "admin"));
       setAuthChecked(true);
     };
     check();
@@ -51,46 +59,28 @@ const Dashboard = () => {
     return () => sub.subscription.unsubscribe();
   }, [navigate]);
 
-  useEffect(() => {
-    if (!isAdmin) return;
+  const refresh = useCallback(async () => {
     setLoading(true);
-    Promise.all([
-      supabase.from("quote_requests").select("*").order("created_at", { ascending: false }).limit(200),
-      supabase.from("email_send_log").select("*").order("created_at", { ascending: false }).limit(500),
-    ]).then(([q, e]) => {
-      setQuotes((q.data as Quote[]) ?? []);
-      setEmails((e.data as EmailLog[]) ?? []);
-      setLoading(false);
-    });
-  }, [isAdmin]);
+    const [l, j] = await Promise.all([
+      supabase.from("quote_requests").select("*").order("created_at", { ascending: false }).limit(500),
+      supabase.from("jobs").select("*").order("job_date", { ascending: false, nullsFirst: false }).limit(500),
+    ]);
+    setLeads((l.data as Lead[]) ?? []);
+    setJobs((j.data as Job[]) ?? []);
+    setLoading(false);
+  }, []);
 
-  // Deduplicate emails by message_id, keeping latest
-  const dedupedEmails = useMemo(() => {
-    const map = new Map<string, EmailLog>();
-    for (const row of emails) {
-      const key = row.message_id ?? `${row.created_at}-${row.recipient_email}`;
-      if (!map.has(key)) map.set(key, row);
-    }
-    return Array.from(map.values());
-  }, [emails]);
-
-  const filteredEmails = useMemo(() => {
-    if (statusFilter === "all") return dedupedEmails;
-    return dedupedEmails.filter((e) => e.status === statusFilter);
-  }, [dedupedEmails, statusFilter]);
-
-  const stats = useMemo(() => {
-    const total = dedupedEmails.length;
-    const count = (s: string) => dedupedEmails.filter((e) => e.status === s).length;
-    return {
-      total,
-      sent: count("sent"),
-      failed: count("failed") + count("dlq"),
-      suppressed: count("suppressed"),
-    };
-  }, [dedupedEmails]);
+  useEffect(() => { if (isAdmin) refresh(); }, [isAdmin, refresh]);
 
   const signOut = async () => { await supabase.auth.signOut(); };
+
+  const switchTab = (t: Tab) => { setTab(t); setLeadFilter(undefined); setJobFilter(undefined); };
+  const switchTabFiltered = (t: "leads" | "jobs", filter: string) => {
+    setTab(t);
+    if (t === "leads") setLeadFilter(filter); else setJobFilter(filter);
+  };
+
+  const newLeadCount = leads.filter((l) => l.status === "new").length;
 
   if (!authChecked) {
     return <div className="bg-ink min-h-screen p-10 text-fog">Loading...</div>;
@@ -102,146 +92,68 @@ const Dashboard = () => {
         <div className="max-w-md mx-auto">
           <h1 className="font-display text-fire" style={{ fontSize: 32 }}>NOT AUTHORIZED</h1>
           <p className="text-fog mt-3">This account ({email}) doesn't have dashboard access.</p>
-          <button onClick={signOut} className="mt-6 bg-iron border border-steel text-chalk px-4 py-2">
-            Sign out
-          </button>
+          <button onClick={signOut} className="mt-6 bg-iron border border-steel text-chalk px-4 py-2">Sign out</button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-ink min-h-screen">
-      <header className="border-b border-steel px-6 py-4 flex justify-between items-center">
+    <div className="bg-ink min-h-screen flex flex-col">
+      <Toaster />
+      <header className="bg-iron border-b border-steel px-5 py-4 flex justify-between items-center">
         <div>
-          <div className="font-display text-fire" style={{ fontSize: 24 }}>OWNER DASHBOARD</div>
-          <div className="text-fog" style={{ fontSize: 12 }}>{email}</div>
+          <div className="font-display text-chalk" style={{ fontSize: 18 }}>{greeting()}</div>
+          <div className="text-fog" style={{ fontSize: 12 }}>{todayLabel()}</div>
         </div>
-        <button onClick={signOut} className="bg-iron border border-steel text-chalk px-4 py-2" style={{ fontSize: 13 }}>
-          Sign out
-        </button>
+        {newLeadCount > 0 && (
+          <div className="relative">
+            <span className="bg-fire text-white font-display px-2 py-1" style={{ fontSize: 12 }}>
+              {newLeadCount} NEW
+            </span>
+            <span className="pulse-dot absolute -top-1 -right-1 bg-fire" />
+          </div>
+        )}
       </header>
 
-      <div className="px-6 pt-6 flex gap-2">
-        {(["quotes", "emails"] as const).map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className="font-display py-2 px-4 transition-colors"
-            style={{
-              fontSize: 14,
-              backgroundColor: tab === t ? "hsl(var(--fire))" : "hsl(var(--iron))",
-              color: tab === t ? "white" : "hsl(var(--fog))",
-              border: "1px solid hsl(var(--steel))",
-            }}
-          >
-            {t === "quotes" ? `QUOTE REQUESTS (${quotes.length})` : `EMAIL ACTIVITY (${stats.total})`}
-          </button>
-        ))}
-      </div>
-
-      <main className="p-6">
-        {loading && <div className="text-fog">Loading...</div>}
-
-        {!loading && tab === "quotes" && (
-          <div className="space-y-3">
-            {quotes.length === 0 && <div className="text-fog">No quote requests yet.</div>}
-            {quotes.map((q) => (
-              <div key={q.id} className="bg-iron border border-steel p-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="font-display text-chalk" style={{ fontSize: 18 }}>{q.name}</div>
-                    <a href={`tel:${q.phone}`} className="text-fire" style={{ fontSize: 14 }}>📞 {q.phone}</a>
-                  </div>
-                  <div className="text-fog text-right" style={{ fontSize: 12 }}>
-                    {new Date(q.created_at).toLocaleString()}
-                  </div>
-                </div>
-                <div className="mt-2 flex gap-3 flex-wrap" style={{ fontSize: 13 }}>
-                  {q.service && <span className="text-chalk">🔧 {q.service}</span>}
-                  {q.zip && <span className="text-chalk">📍 {q.zip}</span>}
-                </div>
-                {q.message && <div className="text-fog mt-2" style={{ fontSize: 14 }}>{q.message}</div>}
-              </div>
-            ))}
+      <main className="flex-1 overflow-y-auto px-4 pt-4 pb-24">
+        {loading && jobs.length === 0 && leads.length === 0 ? (
+          <div className="space-y-2">
+            {[0,1,2,3].map((i) => <div key={i} className="h-24 bg-iron animate-pulse" />)}
           </div>
-        )}
-
-        {!loading && tab === "emails" && (
-          <div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-              {[
-                { label: "Total", value: stats.total },
-                { label: "Sent", value: stats.sent },
-                { label: "Failed", value: stats.failed },
-                { label: "Suppressed", value: stats.suppressed },
-              ].map((s) => (
-                <div key={s.label} className="bg-iron border border-steel p-4">
-                  <div className="text-fog uppercase" style={{ fontSize: 11, letterSpacing: 1.5 }}>{s.label}</div>
-                  <div className="font-display text-chalk mt-1" style={{ fontSize: 28 }}>{s.value}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mb-3 flex gap-2 flex-wrap">
-              {["all", "sent", "pending", "failed", "dlq", "suppressed"].map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setStatusFilter(s)}
-                  className="px-3 py-1.5 border border-steel uppercase"
-                  style={{
-                    fontSize: 11, letterSpacing: 1.5,
-                    backgroundColor: statusFilter === s ? "hsl(var(--fire))" : "hsl(var(--iron))",
-                    color: statusFilter === s ? "white" : "hsl(var(--fog))",
-                  }}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-
-            <div className="bg-iron border border-steel overflow-x-auto">
-              <table className="w-full" style={{ fontSize: 13 }}>
-                <thead>
-                  <tr className="text-fog uppercase border-b border-steel" style={{ fontSize: 11, letterSpacing: 1.5 }}>
-                    <th className="text-left p-3">Template</th>
-                    <th className="text-left p-3">Recipient</th>
-                    <th className="text-left p-3">Status</th>
-                    <th className="text-left p-3">When</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredEmails.length === 0 && (
-                    <tr><td colSpan={4} className="text-fog p-4 text-center">No emails match.</td></tr>
-                  )}
-                  {filteredEmails.map((e, i) => (
-                    <tr key={`${e.message_id}-${i}`} className="border-b border-steel">
-                      <td className="p-3 text-chalk">{e.template_name}</td>
-                      <td className="p-3 text-chalk">{e.recipient_email}</td>
-                      <td className="p-3">
-                        <span
-                          className="px-2 py-1 uppercase"
-                          style={{
-                            fontSize: 10, letterSpacing: 1.2,
-                            backgroundColor: STATUS_COLORS[e.status] ?? "hsl(var(--steel))",
-                            color: "white",
-                          }}
-                        >
-                          {e.status}
-                        </span>
-                        {e.error_message && (
-                          <div className="text-avail-red mt-1" style={{ fontSize: 11 }}>{e.error_message}</div>
-                        )}
-                      </td>
-                      <td className="p-3 text-fog">{new Date(e.created_at).toLocaleString()}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+        ) : (
+          <>
+            {tab === "home" && <HomeTab leads={leads} jobs={jobs} refresh={refresh} onSwitchTab={switchTab} onSwitchTabFiltered={switchTabFiltered} />}
+            {tab === "leads" && <LeadsTab leads={leads} refresh={refresh} initialFilter={leadFilter} />}
+            {tab === "jobs" && <JobsTab jobs={jobs} refresh={refresh} initialFilter={jobFilter} />}
+            {tab === "customers" && <CustomersTab jobs={jobs} />}
+            {tab === "settings" && <SettingsTab onSignOut={signOut} />}
+          </>
         )}
       </main>
+
+      <nav className="fixed bottom-0 left-0 right-0 bg-iron border-t-2 border-steel flex z-40">
+        {NAV.map((n) => {
+          const active = tab === n.id;
+          return (
+            <button
+              key={n.id}
+              onClick={() => switchTab(n.id)}
+              className="flex-1 flex flex-col items-center py-2 transition-colors"
+              style={{
+                color: active ? "hsl(var(--fire))" : "hsl(var(--fog))",
+                borderTop: active ? "2px solid hsl(var(--fire))" : "2px solid transparent",
+                marginTop: -2,
+              }}
+            >
+              <span style={{ fontSize: 22 }}>{n.icon}</span>
+              <span className="font-condensed uppercase mt-0.5" style={{ fontSize: 10, letterSpacing: 1 }}>
+                {n.label}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 };
