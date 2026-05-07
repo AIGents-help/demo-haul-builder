@@ -122,35 +122,119 @@ export type Database = {
         }
         Relationships: []
       }
+      jobs: {
+        Row: {
+          after_photo_url: string | null
+          before_photo_url: string | null
+          created_at: string
+          customer_name: string
+          customer_phone: string | null
+          final_amount: number | null
+          google_review_requested: boolean
+          id: string
+          job_address: string | null
+          job_date: string | null
+          job_name: string
+          job_number: number
+          notes: string | null
+          paid: boolean
+          payment_method: string | null
+          quoted_amount: number | null
+          service_type: string
+          status: string
+          updated_at: string
+          zip: string | null
+        }
+        Insert: {
+          after_photo_url?: string | null
+          before_photo_url?: string | null
+          created_at?: string
+          customer_name: string
+          customer_phone?: string | null
+          final_amount?: number | null
+          google_review_requested?: boolean
+          id?: string
+          job_address?: string | null
+          job_date?: string | null
+          job_name: string
+          job_number?: number
+          notes?: string | null
+          paid?: boolean
+          payment_method?: string | null
+          quoted_amount?: number | null
+          service_type: string
+          status?: string
+          updated_at?: string
+          zip?: string | null
+        }
+        Update: {
+          after_photo_url?: string | null
+          before_photo_url?: string | null
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string | null
+          final_amount?: number | null
+          google_review_requested?: boolean
+          id?: string
+          job_address?: string | null
+          job_date?: string | null
+          job_name?: string
+          job_number?: number
+          notes?: string | null
+          paid?: boolean
+          payment_method?: string | null
+          quoted_amount?: number | null
+          service_type?: string
+          status?: string
+          updated_at?: string
+          zip?: string | null
+        }
+        Relationships: []
+      }
       quote_requests: {
         Row: {
           created_at: string
+          estimate_high: number | null
+          estimate_low: number | null
+          follow_up_date: string | null
           id: string
+          lead_notes: string | null
           message: string | null
           name: string
           phone: string
           service: string | null
           source: string | null
+          status: string
           zip: string | null
         }
         Insert: {
           created_at?: string
+          estimate_high?: number | null
+          estimate_low?: number | null
+          follow_up_date?: string | null
           id?: string
+          lead_notes?: string | null
           message?: string | null
           name: string
           phone: string
           service?: string | null
           source?: string | null
+          status?: string
           zip?: string | null
         }
         Update: {
           created_at?: string
+          estimate_high?: number | null
+          estimate_low?: number | null
+          follow_up_date?: string | null
           id?: string
+          lead_notes?: string | null
           message?: string | null
           name?: string
           phone?: string
           service?: string | null
           source?: string | null
+          status?: string
           zip?: string | null
         }
         Relationships: []
