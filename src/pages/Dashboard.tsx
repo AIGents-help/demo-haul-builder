@@ -33,7 +33,7 @@ const NAV: { id: Tab; icon: string; label: string }[] = [
 const Dashboard = () => {
   const navigate = useNavigate();
   const [authChecked, setAuthChecked] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
   const [email, setEmail] = useState("");
   const [tab, setTab] = useState<Tab>("home");
   const [leadFilter, setLeadFilter] = useState<string | undefined>();
@@ -47,9 +47,7 @@ const Dashboard = () => {
       const { data: s } = await supabase.auth.getSession();
       if (!s.session) { navigate("/auth", { replace: true }); return; }
       setEmail(s.session.user.email ?? "");
-      const { data: roles } = await supabase
-        .from("user_roles").select("role").eq("user_id", s.session.user.id);
-      setIsAdmin(!!roles?.some((r) => r.role === "admin"));
+      setHasSession(true);
       setAuthChecked(true);
     };
     check();
@@ -70,7 +68,7 @@ const Dashboard = () => {
     setLoading(false);
   }, []);
 
-  useEffect(() => { if (isAdmin) refresh(); }, [isAdmin, refresh]);
+  useEffect(() => { if (hasSession) refresh(); }, [hasSession, refresh]);
 
   const signOut = async () => { await supabase.auth.signOut(); };
 
@@ -86,17 +84,7 @@ const Dashboard = () => {
     return <div className="bg-ink min-h-screen p-10 text-fog">Loading...</div>;
   }
 
-  if (!isAdmin) {
-    return (
-      <div className="bg-ink min-h-screen p-10">
-        <div className="max-w-md mx-auto">
-          <h1 className="font-display text-fire" style={{ fontSize: 32 }}>NOT AUTHORIZED</h1>
-          <p className="text-fog mt-3">This account ({email}) doesn't have dashboard access.</p>
-          <button onClick={signOut} className="mt-6 bg-iron border border-steel text-chalk px-4 py-2">Sign out</button>
-        </div>
-      </div>
-    );
-  }
+  if (!hasSession) return null;
 
   return (
     <div className="bg-ink min-h-screen flex flex-col">
