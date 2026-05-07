@@ -203,8 +203,10 @@ const PhotosForm = ({ job, onDone }: { job: Job; onDone: () => void }) => {
     const { error: upErr } = await supabase.storage.from("job-photos").upload(path, file, { upsert: true });
     if (upErr) { toast.error(upErr.message); setUploading(null); return; }
     const { data } = supabase.storage.from("job-photos").getPublicUrl(path);
-    const field = kind === "before" ? "before_photo_url" : "after_photo_url";
-    const { error } = await supabase.from("jobs").update({ [field]: data.publicUrl }).eq("id", job.id);
+    const update = kind === "before"
+      ? { before_photo_url: data.publicUrl }
+      : { after_photo_url: data.publicUrl };
+    const { error } = await supabase.from("jobs").update(update).eq("id", job.id);
     setUploading(null);
     if (error) toast.error(error.message); else { toast.success("Photo uploaded"); onDone(); }
   };
