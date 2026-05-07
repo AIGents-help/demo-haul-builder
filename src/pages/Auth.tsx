@@ -7,6 +7,7 @@ const Auth = () => {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
@@ -57,12 +58,22 @@ const Auth = () => {
             placeholder="Email"
             className="w-full bg-iron border border-steel text-chalk p-3.5 focus:outline-none focus:border-fire"
           />
-          <input
-            type="password" required minLength={6} value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="w-full bg-iron border border-steel text-chalk p-3.5 focus:outline-none focus:border-fire"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"} required minLength={6} value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              className="w-full bg-iron border border-steel text-chalk p-3.5 pr-16 focus:outline-none focus:border-fire"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((s) => !s)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-fog hover:text-fire font-condensed uppercase"
+              style={{ fontSize: 12, letterSpacing: 1 }}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
           {error && <div className="text-avail-red" style={{ fontSize: 13 }}>{error}</div>}
           {info && <div className="text-avail-green" style={{ fontSize: 13 }}>{info}</div>}
           <button
