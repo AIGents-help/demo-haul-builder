@@ -33,30 +33,12 @@ const NAV: { id: Tab; icon: string; label: string }[] = [
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [authChecked, setAuthChecked] = useState(false);
-  const [hasSession, setHasSession] = useState(false);
-  const [email, setEmail] = useState("");
   const [tab, setTab] = useState<Tab>("home");
   const [leadFilter, setLeadFilter] = useState<string | undefined>();
   const [jobFilter, setJobFilter] = useState<string | undefined>();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const check = async () => {
-      const { data: s } = await supabase.auth.getSession();
-      if (!s.session) { navigate("/auth", { replace: true }); return; }
-      setEmail(s.session.user.email ?? "");
-      setHasSession(true);
-      setAuthChecked(true);
-    };
-    check();
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (!session) navigate("/auth", { replace: true });
-    });
-    return () => sub.subscription.unsubscribe();
-  }, [navigate]);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -69,7 +51,7 @@ const Dashboard = () => {
     setLoading(false);
   }, []);
 
-  useEffect(() => { if (hasSession) refresh(); }, [hasSession, refresh]);
+  useEffect(() => { refresh(); }, [refresh]);
 
   const signOut = async () => { await supabase.auth.signOut(); };
 
@@ -80,12 +62,6 @@ const Dashboard = () => {
   };
 
   const newLeadCount = leads.filter((l) => l.status === "new").length;
-
-  if (!authChecked) {
-    return <div className="bg-ink min-h-screen p-10 text-fog">Loading...</div>;
-  }
-
-  if (!hasSession) return null;
 
   return (
     <div className="bg-ink min-h-screen flex flex-col">
