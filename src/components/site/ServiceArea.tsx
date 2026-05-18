@@ -1,10 +1,20 @@
 import { BUSINESS } from "@/config/business";
+import areaImg from "@/assets/service-area.jpg";
 
 export const ServiceArea = () => {
   const pills = [...BUSINESS.serviceAreas, "And More"];
   return (
-    <section className="bg-ink px-6 md:px-10 py-20">
-      <div className="max-w-3xl mx-auto text-center">
+    <section className="relative bg-ink px-6 md:px-10 py-24 overflow-hidden">
+      <img
+        src={areaImg}
+        alt="Aerial view of Greater Philadelphia neighborhoods we serve"
+        loading="lazy"
+        width={1600}
+        height={900}
+        className="absolute inset-0 w-full h-full object-cover opacity-25"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-ink via-ink/70 to-ink" />
+      <div className="relative max-w-3xl mx-auto text-center">
         <div className="font-eyebrow mb-3">WHERE WE WORK</div>
         <h2 className="font-display text-chalk text-[40px] md:text-[52px] leading-none">
           SERVING GREATER PHILLY &amp; BEYOND.
