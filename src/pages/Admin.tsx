@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { ADMIN_PASSWORD } from "@/config/business";
 import { AvailabilityStatus, statusColor } from "@/hooks/useAvailability";
+import { SEO } from "@/components/SEO";
 
 const STATUSES: { v: AvailabilityStatus; label: string }[] = [
   { v: "open", label: "✓ OPEN" },
@@ -42,6 +43,7 @@ const Admin = () => {
   if (!authed) {
     return (
       <div className="bg-ink min-h-screen px-6 py-10">
+        <SEO title="Availability Admin — DiAntonio's" description="Update site availability status." path="/admin" noindex />
         <div className="max-w-sm mx-auto">
           <h1 className="font-display text-fire" style={{ fontSize: 36 }}>AVAILABILITY ADMIN</h1>
           <input
@@ -62,6 +64,7 @@ const Admin = () => {
 
   return (
     <div className="bg-ink min-h-screen px-6 py-10">
+      <SEO title="Availability Admin — DiAntonio's" description="Update site availability status." path="/admin" noindex />
       <div className="max-w-md mx-auto">
         <h1 className="font-display text-fire" style={{ fontSize: 36 }}>AVAILABILITY ADMIN</h1>
 
