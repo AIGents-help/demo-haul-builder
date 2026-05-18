@@ -8,6 +8,7 @@ import { LeadsTab } from "@/components/dashboard/LeadsTab";
 import { JobsTab } from "@/components/dashboard/JobsTab";
 import { CustomersTab } from "@/components/dashboard/CustomersTab";
 import { SettingsTab } from "@/components/dashboard/SettingsTab";
+import { CalendarTab } from "@/components/dashboard/CalendarTab";
 import { SEO } from "@/components/SEO";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { AppSidebar, type DashTab } from "@/components/dashboard/shell/AppSidebar";
@@ -30,8 +31,8 @@ const NAV: { id: Tab; icon: string; label: string }[] = [
   { id: "home", icon: "🏠", label: "Home" },
   { id: "leads", icon: "📋", label: "Leads" },
   { id: "jobs", icon: "🔨", label: "Jobs" },
-  { id: "customers", icon: "👥", label: "Customers" },
-  { id: "settings", icon: "⚙️", label: "Settings" },
+  { id: "calendar", icon: "📅", label: "Calendar" },
+  { id: "settings", icon: "⚙️", label: "More" },
 ];
 
 const Dashboard = () => {
@@ -79,7 +80,8 @@ const Dashboard = () => {
           {tab === "jobs" && <JobsTab jobs={jobs} refresh={refresh} initialFilter={jobFilter} />}
           {tab === "customers" && <CustomersTab jobs={jobs} />}
           {tab === "settings" && <SettingsTab onSignOut={signOut} />}
-          {(tab === "calendar" || tab === "invoices" || tab === "reports") && (
+          {tab === "calendar" && <CalendarTab jobs={jobs} />}
+          {(tab === "invoices" || tab === "reports") && (
             <ComingSoon label={tab} />
           )}
         </>
