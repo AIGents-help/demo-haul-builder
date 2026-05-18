@@ -19,6 +19,8 @@ export const BUSINESS = {
   neighbors: ["Delaware County", "Chester County", "Philadelphia"],
   instagram: "diantoniosdemoandhauling",
   googleReviewsUrl: "#",
+  // TODO: Replace with your actual PA HIC registration number (format: PAxxxxxx)
+  paLicense: "PA000000" as string,
 };
 
 export const ADMIN_PASSWORD =
