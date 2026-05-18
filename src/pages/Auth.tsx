@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { SEO } from "@/components/SEO";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -46,6 +47,7 @@ const Auth = () => {
 
   return (
     <div className="bg-ink min-h-screen px-6 py-16">
+      <SEO title="Owner Login — DiAntonio's Demo & Hauling" description="Sign in to the DiAntonio's office backend." path="/auth" noindex />
       <div className="max-w-sm mx-auto">
         <h1 className="font-display text-fire" style={{ fontSize: 36 }}>OWNER LOGIN</h1>
         <p className="text-fog mt-2" style={{ fontSize: 14 }}>
