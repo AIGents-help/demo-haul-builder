@@ -1,4 +1,5 @@
 import { useAvailability, statusColor } from "@/hooks/useAvailability";
+import { UserPlus } from "lucide-react";
 
 export const MobileBar = () => {
   const a = useAvailability();
@@ -13,13 +14,23 @@ export const MobileBar = () => {
           <div className="text-chalk truncate" style={{ fontSize: 13, fontWeight: 600 }}>{a.message}</div>
         </div>
       </div>
-      <button
-        onClick={() => document.getElementById("quote-form")?.scrollIntoView({ behavior: "smooth" })}
-        className="bg-fire text-white font-condensed font-bold uppercase px-4 py-2.5 shrink-0"
-        style={{ fontSize: 13 }}
-      >
-        BOOK NOW
-      </button>
+      <div className="flex items-center gap-2 shrink-0">
+        <a
+          href="/diantonios.vcf"
+          download="DiAntonios-Demo-Hauling.vcf"
+          className="border border-fire text-fire p-2.5"
+          aria-label="Save DiAntonio's to your contacts"
+        >
+          <UserPlus className="h-4 w-4" />
+        </a>
+        <button
+          onClick={() => document.getElementById("quote-form")?.scrollIntoView({ behavior: "smooth" })}
+          className="bg-fire text-white font-condensed font-bold uppercase px-4 py-2.5"
+          style={{ fontSize: 13 }}
+        >
+          BOOK NOW
+        </button>
+      </div>
     </div>
   );
 };
