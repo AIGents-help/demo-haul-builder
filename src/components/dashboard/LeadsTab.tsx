@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Lead, LeadStatus, LEAD_STATUS_COLOR, LEAD_STATUS_LABEL, timeAgo, formatMoney } from "./types";
 import { supabase } from "@/integrations/supabase/client";
 import { BottomSheet } from "./Sheet";
@@ -11,6 +11,9 @@ export const LeadsTab = ({
 }: { leads: Lead[]; refresh: () => void; initialFilter?: string }) => {
   const [filter, setFilter] = useState<string>(initialFilter ?? "all");
   const [showAdd, setShowAdd] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const [prefill, setPrefill] = useState<Partial<AddLeadFormValues> | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
   const filtered = filter === "all" ? leads : leads.filter((l) => l.status === filter);
 
@@ -25,11 +28,60 @@ export const LeadsTab = ({
     if (error) toast.error("Delete failed"); else { toast.success("Lead deleted"); refresh(); }
   };
 
+  const onScanFile = async (file: File) => {
+    setScanning(true);
+    try {
+      const base64 = await fileToBase64(file);
+      const { data, error } = await supabase.functions.invoke("scan-lead", {
+        body: { imageBase64: base64, mimeType: file.type || "image/jpeg" },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      const notesParts = [
+        data.address ? `Address: ${data.address}` : null,
+        data.notes ?? null,
+      ].filter(Boolean);
+      setPrefill({
+        name: data.name ?? "",
+        phone: data.phone ?? "",
+        service: data.service ?? "",
+        zip: data.zip ?? "",
+        lead_notes: notesParts.join("\n"),
+        source: "Photo Scan",
+      });
+      setShowAdd(true);
+      toast.success("Scanned! Review and save.");
+    } catch (e: any) {
+      toast.error(e.message || "Scan failed");
+    } finally {
+      setScanning(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="font-display text-chalk" style={{ fontSize: 26 }}>LEADS</h1>
-        <button onClick={() => setShowAdd(true)} className="border border-fire text-fire font-condensed uppercase px-3 py-1.5" style={{ fontSize: 12, letterSpacing: 1.5 }}>+ Add</button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => fileRef.current?.click()}
+            disabled={scanning}
+            className="border border-fire text-fire font-condensed uppercase px-3 py-1.5 disabled:opacity-50"
+            style={{ fontSize: 12, letterSpacing: 1.5 }}
+          >
+            {scanning ? "SCANNING…" : "📷 SCAN"}
+          </button>
+          <button onClick={() => { setPrefill(null); setShowAdd(true); }} className="border border-fire text-fire font-condensed uppercase px-3 py-1.5" style={{ fontSize: 12, letterSpacing: 1.5 }}>+ Add</button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) onScanFile(f); }}
+          />
+        </div>
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 mb-4">
@@ -95,17 +147,24 @@ export const LeadsTab = ({
         </div>
       )}
 
-      <BottomSheet open={showAdd} onClose={() => setShowAdd(false)} title="ADD LEAD">
-        <AddLeadForm onDone={() => { setShowAdd(false); refresh(); }} />
+      <BottomSheet open={showAdd} onClose={() => setShowAdd(false)} title={prefill ? "REVIEW SCANNED LEAD" : "ADD LEAD"}>
+        <AddLeadForm initial={prefill ?? undefined} onDone={() => { setShowAdd(false); setPrefill(null); refresh(); }} />
       </BottomSheet>
     </div>
   );
 };
 
-const AddLeadForm = ({ onDone }: { onDone: () => void }) => {
-  const [form, setForm] = useState({
+type AddLeadFormValues = {
+  name: string; phone: string; service: string; source: string;
+  estimate_low: string; estimate_high: string; lead_notes: string;
+  follow_up_date: string; zip: string;
+};
+
+const AddLeadForm = ({ onDone, initial }: { onDone: () => void; initial?: Partial<AddLeadFormValues> }) => {
+  const [form, setForm] = useState<AddLeadFormValues>({
     name: "", phone: "", service: "", source: "Website",
-    estimate_low: "", estimate_high: "", lead_notes: "", follow_up_date: "",
+    estimate_low: "", estimate_high: "", lead_notes: "", follow_up_date: "", zip: "",
+    ...initial,
   });
   const [saving, setSaving] = useState(false);
 
@@ -119,6 +178,7 @@ const AddLeadForm = ({ onDone }: { onDone: () => void }) => {
       phone: form.phone,
       service: form.service || null,
       source: form.source || null,
+      zip: form.zip || null,
       estimate_low: form.estimate_low ? Number(form.estimate_low) : null,
       estimate_high: form.estimate_high ? Number(form.estimate_high) : null,
       lead_notes: form.lead_notes || null,
@@ -139,8 +199,9 @@ const AddLeadForm = ({ onDone }: { onDone: () => void }) => {
         <option>Demolition</option><option>Junk Removal</option><option>Hauling</option><option>Not Sure</option>
       </select>
       <select className={inp} value={form.source} onChange={(e) => set("source", e.target.value)}>
-        {["Website","Instagram","Photo Text","Phone","Referral","Nextdoor","Google"].map((s) => <option key={s}>{s}</option>)}
+        {["Website","Instagram","Photo Text","Photo Scan","Phone","Referral","Nextdoor","Google"].map((s) => <option key={s}>{s}</option>)}
       </select>
+      <input className={inp} placeholder="ZIP" value={form.zip} onChange={(e) => set("zip", e.target.value)} />
       <div className="grid grid-cols-2 gap-2">
         <input className={inp} type="number" placeholder="Est. Low $" value={form.estimate_low} onChange={(e) => set("estimate_low", e.target.value)} />
         <input className={inp} type="number" placeholder="Est. High $" value={form.estimate_high} onChange={(e) => set("estimate_high", e.target.value)} />
@@ -153,3 +214,14 @@ const AddLeadForm = ({ onDone }: { onDone: () => void }) => {
     </div>
   );
 };
+
+const fileToBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result.split(",")[1] ?? "");
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
