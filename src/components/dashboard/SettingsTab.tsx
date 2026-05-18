@@ -16,7 +16,7 @@ const SCRIPTS = [
   { title: "Referral Ask", text: "Hey [Name]! Glad we could help. If you know anyone who needs demo, junk removal, or hauling — send them our way! We always take great care of referrals. — DiAntonio's Demo & Hauling" },
 ];
 
-const PRICES = [
+const DEFAULT_PRICES: [string, string, string][] = [
   ["Small junk load", "$75", "$175"],
   ["Medium load", "$175", "$350"],
   ["Full truck", "$350", "$600"],
@@ -29,11 +29,15 @@ const PRICES = [
   ["Large/commercial", "$300", "$800+"],
 ];
 
+const PRICES_KEY = "dd_price_guide_v1";
+
 export const SettingsTab = ({ onSignOut }: { onSignOut: () => void }) => {
   const [status, setStatus] = useState<AvailabilityStatus>("open");
   const [message, setMessage] = useState("This week — openings available");
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState<number | null>(null);
+  const [prices, setPrices] = useState<[string, string, string][]>(DEFAULT_PRICES);
+  const [editingPrices, setEditingPrices] = useState(false);
 
   useEffect(() => {
     supabase.from("availability").select("status, message").order("updated_at", { ascending: false }).limit(1).maybeSingle()
@@ -43,7 +47,31 @@ export const SettingsTab = ({ onSignOut }: { onSignOut: () => void }) => {
           setMessage(data.message);
         }
       });
+    try {
+      const raw = localStorage.getItem(PRICES_KEY);
+      if (raw) setPrices(JSON.parse(raw));
+    } catch {}
   }, []);
+
+  const updatePrice = (i: number, col: 0 | 1 | 2, val: string) => {
+    setPrices((prev) => {
+      const next = prev.map((r) => [...r] as [string, string, string]);
+      next[i][col] = val;
+      return next;
+    });
+  };
+  const addRow = () => setPrices((p) => [...p, ["New job", "$0", "$0"]]);
+  const removeRow = (i: number) => setPrices((p) => p.filter((_, idx) => idx !== i));
+  const savePrices = () => {
+    localStorage.setItem(PRICES_KEY, JSON.stringify(prices));
+    setEditingPrices(false);
+    toast.success("✓ Price guide saved");
+  };
+  const resetPrices = () => {
+    setPrices(DEFAULT_PRICES);
+    localStorage.removeItem(PRICES_KEY);
+    toast.success("Reset to defaults");
+  };
 
   const save = async () => {
     setSaving(true);
@@ -115,7 +143,16 @@ export const SettingsTab = ({ onSignOut }: { onSignOut: () => void }) => {
       </section>
 
       <section>
-        <h2 className="font-display text-chalk mb-3" style={{ fontSize: 22 }}>QUICK PRICE GUIDE</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-display text-chalk" style={{ fontSize: 22 }}>QUICK PRICE GUIDE</h2>
+          <button
+            onClick={() => setEditingPrices((v) => !v)}
+            className="border border-fire text-fire font-condensed uppercase px-3 py-1.5"
+            style={{ fontSize: 11, letterSpacing: 1.5 }}
+          >
+            {editingPrices ? "DONE" : "EDIT"}
+          </button>
+        </div>
         <div className="bg-iron overflow-x-auto">
           <table className="w-full" style={{ fontSize: 13 }}>
             <thead>
@@ -123,19 +160,40 @@ export const SettingsTab = ({ onSignOut }: { onSignOut: () => void }) => {
                 <th className="text-left p-2">Job</th>
                 <th className="text-left p-2">Low</th>
                 <th className="text-left p-2">High</th>
+                {editingPrices && <th className="p-2 w-8"></th>}
               </tr>
             </thead>
             <tbody>
-              {PRICES.map(([j, l, h], i) => (
+              {prices.map(([j, l, h], i) => (
                 <tr key={i} className="border-b border-steel">
-                  <td className="p-2 text-chalk">{j}</td>
-                  <td className="p-2 text-fog">{l}</td>
-                  <td className="p-2 text-fog">{h}</td>
+                  {editingPrices ? (
+                    <>
+                      <td className="p-1"><input value={j} onChange={(e) => updatePrice(i, 0, e.target.value)} className="w-full bg-ink border border-steel text-chalk p-2 focus:outline-none focus:border-fire" /></td>
+                      <td className="p-1"><input value={l} onChange={(e) => updatePrice(i, 1, e.target.value)} className="w-20 bg-ink border border-steel text-chalk p-2 focus:outline-none focus:border-fire" /></td>
+                      <td className="p-1"><input value={h} onChange={(e) => updatePrice(i, 2, e.target.value)} className="w-24 bg-ink border border-steel text-chalk p-2 focus:outline-none focus:border-fire" /></td>
+                      <td className="p-1 text-center">
+                        <button onClick={() => removeRow(i)} className="text-fog hover:text-fire" style={{ fontSize: 18 }}>×</button>
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td className="p-2 text-chalk">{j}</td>
+                      <td className="p-2 text-fog">{l}</td>
+                      <td className="p-2 text-fog">{h}</td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        {editingPrices && (
+          <div className="grid grid-cols-3 gap-2 mt-3">
+            <button onClick={addRow} className="border border-steel text-chalk font-condensed uppercase py-2" style={{ fontSize: 11, letterSpacing: 1.5 }}>+ ADD ROW</button>
+            <button onClick={resetPrices} className="border border-steel text-fog font-condensed uppercase py-2" style={{ fontSize: 11, letterSpacing: 1.5 }}>RESET</button>
+            <button onClick={savePrices} className="bg-fire text-white font-condensed uppercase py-2" style={{ fontSize: 11, letterSpacing: 1.5 }}>SAVE</button>
+          </div>
+        )}
         <div className="text-fog italic mt-2" style={{ fontSize: 12 }}>
           Final price always confirmed on-site before work begins.
         </div>
