@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { SEO } from "@/components/SEO";
 
 const Unsubscribe = () => {
   const [state, setState] = useState<"loading" | "ready" | "done" | "invalid" | "already">("loading");
@@ -30,6 +31,7 @@ const Unsubscribe = () => {
 
   return (
     <main className="min-h-screen bg-ink flex items-center justify-center p-6">
+      <SEO title="Unsubscribe — DiAntonio's Demo & Hauling" description="Stop receiving emails from DiAntonio's Demo & Hauling." path="/unsubscribe" noindex />
       <div className="bg-iron border border-steel max-w-md w-full p-10 text-center">
         <h1 className="font-display text-chalk text-4xl mb-4">UNSUBSCRIBE</h1>
         {state === "loading" && <p className="text-fog">Checking your link...</p>}
