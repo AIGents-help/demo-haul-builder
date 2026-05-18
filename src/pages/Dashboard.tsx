@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
 import { Lead, Job } from "@/components/dashboard/types";
@@ -32,7 +31,6 @@ const NAV: { id: Tab; icon: string; label: string }[] = [
 ];
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>("home");
   const [leadFilter, setLeadFilter] = useState<string | undefined>();
   const [jobFilter, setJobFilter] = useState<string | undefined>();
