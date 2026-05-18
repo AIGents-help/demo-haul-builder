@@ -7,6 +7,7 @@ import { Calculator } from "@/components/site/Calculator";
 import { WhyUs } from "@/components/site/WhyUs";
 import { BeforeAfter } from "@/components/site/BeforeAfter";
 import { Reviews } from "@/components/site/Reviews";
+import { RecentJobs } from "@/components/site/RecentJobs";
 import { QuoteForm } from "@/components/site/QuoteForm";
 import { ServiceArea } from "@/components/site/ServiceArea";
 import { Footer } from "@/components/site/Footer";
@@ -30,6 +31,7 @@ const Index = () => (
       <WhyUs />
       <BeforeAfter />
       <Reviews />
+      <RecentJobs />
       <QuoteForm />
       <ServiceArea />
     </main>
