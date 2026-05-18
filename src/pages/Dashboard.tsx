@@ -189,6 +189,5 @@ const ComingSoon = ({ label }: { label: string }) => (
 /* end */
 const _End = () => null;
 void _End;
-};
 
 export default Dashboard;
