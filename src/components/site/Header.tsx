@@ -1,4 +1,5 @@
 import { BUSINESS } from "@/config/business";
+import { SaveContactButton } from "./SaveContactButton";
 
 const scrollTo = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -15,14 +16,17 @@ export const Header = () => (
           DEMO &amp; HAULING LLC
         </div>
       </div>
-      <button
-        onClick={() => scrollTo("quote-form")}
-        className="bg-fire hover:bg-ember text-white font-condensed font-bold uppercase px-5 py-2.5 transition-colors"
-        style={{ fontSize: 13, letterSpacing: 1 }}
-        aria-label="Get a free quote"
-      >
-        📞 FREE QUOTE
-      </button>
+      <div className="flex items-center gap-2">
+        <SaveContactButton variant="outline" label="Save Contact" className="hidden sm:inline-flex" />
+        <button
+          onClick={() => scrollTo("quote-form")}
+          className="bg-fire hover:bg-ember text-white font-condensed font-bold uppercase px-5 py-2.5 transition-colors"
+          style={{ fontSize: 13, letterSpacing: 1 }}
+          aria-label="Get a free quote"
+        >
+          📞 FREE QUOTE
+        </button>
+      </div>
     </div>
   </header>
 );
