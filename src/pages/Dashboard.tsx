@@ -8,6 +8,7 @@ import { LeadsTab } from "@/components/dashboard/LeadsTab";
 import { JobsTab } from "@/components/dashboard/JobsTab";
 import { CustomersTab } from "@/components/dashboard/CustomersTab";
 import { SettingsTab } from "@/components/dashboard/SettingsTab";
+import { SEO } from "@/components/SEO";
 
 type Tab = "home" | "leads" | "jobs" | "customers" | "settings";
 
@@ -88,6 +89,7 @@ const Dashboard = () => {
 
   return (
     <div className="bg-ink min-h-screen flex flex-col">
+      <SEO title="Owner Dashboard — DiAntonio's" description="Leads, jobs, and customers dashboard." path="/dashboard" noindex />
       <Toaster />
       <header className="bg-iron border-b border-steel px-5 py-4 flex justify-between items-center">
         <div>
