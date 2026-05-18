@@ -7,14 +7,14 @@
 @layer base {
   :root {
     /* Brand palette */
-    --ink:    0 0% 5%;        /* #0D0D0D */
-    --iron:   0 0% 11%;       /* #1C1C1C */
-    --steel:  0 0% 16%;       /* #2A2A2A */
-    --fire:   142 46% 24%;    /* #215B36 — Corey's green (brand primary) */
-    --ember:  142 42% 36%;    /* #357F54 — lighter green */
+    --ink:    0 0% 6%;        /* near-black bg */
+    --iron:   0 0% 10%;       /* surface card */
+    --steel:  0 0% 16%;       /* hairline / muted surface */
+    --fire:   142 60% 42%;    /* primary green, brighter for UI */
+    --ember:  142 50% 32%;    /* deeper green */
     --gold:   43 86% 46%;     /* #D4A017 (accent, used sparingly) */
-    --chalk:  0 0% 98%;       /* #FAFAFA — white */
-    --fog:    32 9% 59%;      /* #A09890 */
+    --chalk:  0 0% 98%;       /* white */
+    --fog:    0 0% 62%;       /* neutral grey text */
     --avail-green: 142 71% 45%;
     --avail-red:   0 72% 51%;
 
@@ -38,23 +38,17 @@
     --border: var(--steel);
     --input: var(--steel);
     --ring: var(--fire);
-    --radius: 0px;
+    --radius: 10px;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar tokens — dark to match suite */
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 78%;
+    --sidebar-primary: 142 60% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 13%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 16%;
+    --sidebar-ring: 142 60% 42%;
   }
 
   .dark {
