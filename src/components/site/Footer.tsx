@@ -1,4 +1,5 @@
 import { BUSINESS } from "@/config/business";
+import { SaveContactButton } from "./SaveContactButton";
 
 export const Footer = () => (
   <footer className="bg-iron px-6 md:px-10 pt-16 pb-10" style={{ borderTop: "3px solid hsl(var(--fire))" }}>
@@ -37,6 +38,7 @@ export const Footer = () => (
         <a href={`mailto:${BUSINESS.email}`} className="block text-fog hover:text-fire mb-2.5" style={{ fontSize: 14 }}>📧 {BUSINESS.email}</a>
         <div className="text-fog mb-2.5" style={{ fontSize: 14 }}>📍 {BUSINESS.cityState} &amp; Surrounding Areas</div>
         <div className="text-fog" style={{ fontSize: 14 }}>⏰ Mon–Sat 7AM–6PM · Sun by appt</div>
+        <SaveContactButton variant="solid" label="📇 Save to Contacts" className="mt-4" />
       </div>
     </div>
 
