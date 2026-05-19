@@ -48,7 +48,7 @@ export const Hero = () => (
     </button>
 
     <div className="relative flex flex-wrap gap-2 justify-center mt-7">
-      {["✓ Licensed", "✓ Insured", "✓ Same-Day Available", "✓ Free Quotes"].map((p) => (
+      {["✓ Licensed", "✓ Insured", "✓ Free Quotes"].map((p) => (
         <span
           key={p}
           className="bg-steel/80 backdrop-blur text-fog font-condensed uppercase"
