@@ -31,7 +31,7 @@ export const Hero = () => (
       className="group relative animate-pulse-cta bg-gradient-to-br from-fire to-ember hover:from-ember hover:to-fire text-white font-display flex flex-col items-center justify-center w-full max-w-[360px] mx-auto mt-8 py-5 px-8 rounded-xl shadow-[0_10px_40px_-10px_hsl(var(--fire)/0.6)] ring-1 ring-white/10 hover:ring-white/20 transition-all hover:-translate-y-0.5"
     >
       <span className="font-condensed text-white/80 uppercase mb-1" style={{ fontSize: 11, letterSpacing: 3 }}>
-        Tap to call · Answers in seconds
+        Tap to call
       </span>
       <span className="flex items-center gap-3 whitespace-nowrap" style={{ fontSize: 26 }}>
         <span className="text-2xl group-hover:rotate-12 transition-transform">📞</span>
