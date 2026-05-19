@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { BUSINESS } from "@/config/business";
 
-// Replace PLACEHOLDERx with real Instagram shortcodes when ready.
 const POSTS = [
-  "PLACEHOLDER1",
-  "PLACEHOLDER2",
-  "PLACEHOLDER3",
-  "PLACEHOLDER4",
-  "PLACEHOLDER5",
-  "PLACEHOLDER6",
+  "DX7haG8lRde",
+  "DX5vlqHl5n5",
+  "DX50xCiFxuP",
+  "DX5tmOZl2vh",
+  "DYGmXEfl6O-",
 ];
 
 type Props = { locationLabel?: string };
