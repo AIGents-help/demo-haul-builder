@@ -7,6 +7,7 @@ const POSTS = [
   "DX50xCiFxuP",
   "DX5tmOZl2vh",
   "DYGmXEfl6O-",
+  "DYGnCXhl9Qf",
 ];
 
 type Props = { locationLabel?: string };
