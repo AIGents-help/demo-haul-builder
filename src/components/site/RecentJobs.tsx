@@ -103,7 +103,27 @@ export const RecentJobs = ({ locationLabel = "the Lehigh Valley" }: Props) => {
           ))}
         </div>
 
-        <div className="mt-12 text-center">
+        <div className="mt-12 text-center max-w-2xl mx-auto">
+          <h3
+            className="font-display"
+            style={{ fontSize: 28, lineHeight: 1.1, letterSpacing: 1.5, color: "#0a0a0a" }}
+          >
+            SEE SOMETHING LIKE YOUR PROJECT? GET A FREE QUOTE IN 15 MINUTES.
+          </h3>
+          <p className="mt-3" style={{ fontSize: 15, color: "#4a4a4a", lineHeight: 1.6 }}>
+            Text us a photo of what you need hauled or demoed at{" "}
+            <a
+              href={`tel:${BUSINESS.phoneTel}`}
+              className="font-semibold underline underline-offset-2"
+              style={{ color: "hsl(var(--fire))" }}
+            >
+              {BUSINESS.phone}
+            </a>
+            , or fill out the form below.
+          </p>
+        </div>
+
+        <div className="mt-8 text-center">
           <a
             href={`https://www.instagram.com/${BUSINESS.instagram}`}
             target="_blank"
