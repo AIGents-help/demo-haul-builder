@@ -1,5 +1,11 @@
 import { BUSINESS } from "@/config/business";
 
+const SMS_BODY = encodeURIComponent(
+  "Hi DiAntonio's — here's a photo of the job. My ZIP is ___ and I need ___.",
+);
+const SMS_HREF = `sms:${BUSINESS.phoneTel}?&body=${SMS_BODY}`;
+const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data=${encodeURIComponent(SMS_HREF)}`;
+
 export const PhotoToQuote = () => (
   <section className="bg-ink px-6 md:px-10 py-20">
     <div className="max-w-6xl mx-auto">
@@ -33,7 +39,7 @@ export const PhotoToQuote = () => (
             TEXT YOUR PHOTO TO:
           </div>
           <a
-            href={`sms:${BUSINESS.phoneTel}`}
+            href={SMS_HREF}
             className="font-display text-white bg-fire hover:bg-ember block mt-3 py-4 px-4 underline-offset-4 transition-colors"
             style={{ fontSize: 40, lineHeight: 1.1 }}
           >
@@ -46,6 +52,28 @@ export const PhotoToQuote = () => (
           <p className="text-chalk mt-4" style={{ fontSize: 14, fontWeight: 600 }}>
             It really is that easy.
           </p>
+
+          {/* QR code — handy on desktop, hidden on phones where Tap to Text already works */}
+          <div className="hidden md:flex items-center gap-4 mt-6 pt-6 border-t border-steel text-left">
+            <div className="bg-white p-2 rounded-md shrink-0" aria-hidden>
+              <img
+                src={QR_SRC}
+                alt="QR code to text DiAntonio's from your phone"
+                width={110}
+                height={110}
+                loading="lazy"
+                style={{ display: "block", width: 110, height: 110 }}
+              />
+            </div>
+            <div>
+              <div className="font-condensed text-fire uppercase" style={{ fontSize: 11, letterSpacing: 3 }}>
+                ON A COMPUTER?
+              </div>
+              <p className="text-chalk mt-1" style={{ fontSize: 13, lineHeight: 1.5 }}>
+                Scan with your phone's camera to open a pre-filled text — just add your photo and hit send.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
