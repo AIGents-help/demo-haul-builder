@@ -4,7 +4,9 @@ Website, lead capture, and owner dashboard for DiAntonio's Demo & Hauling LLC. B
 
 ## Stack
 - **Frontend:** Vite + React + TypeScript + Tailwind + shadcn/ui
-- **Backend:** Supabase project `vcfksbpioimlqmvkrtwb` (database, auth, edge functions)
+- **Backend:** Supabase project `losvrrrhhwgfcmfgfyze` in the AIGents.Help org (database, auth, edge functions)
+- **Email:** Resend (domain `diantoniosdemo.com`) — `notify-new-lead` emails Corey on every new quote request
+- **AI:** OpenAI — `scan-lead` turns a photo of a note/business card into a lead
 - **Hosting:** Vercel — every push to `main` deploys to production
 - **Domain/DNS:** Namecheap (`@` A → 76.76.21.21, `www` CNAME → cname.vercel-dns.com)
 

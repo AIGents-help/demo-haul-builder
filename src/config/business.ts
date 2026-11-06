@@ -23,5 +23,3 @@ export const BUSINESS = {
   paLicense: "PA000000" as string,
 };
 
-export const ADMIN_PASSWORD =
-  (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined) ?? "demo2025";
