@@ -12,7 +12,8 @@
     --steel:  0 0% 16%;       /* hairline / muted surface */
     --fire:   142 60% 42%;    /* primary green, brighter for UI */
     --ember:  142 50% 32%;    /* deeper green */
-    --gold:   43 86% 46%;     /* #D4A017 (accent, used sparingly) */
+    --gold:   43 86% 46%;
+    --forest: 146 55% 24%;    /* #1B5E38 — exact logo green from shirts/trucks */     /* #D4A017 (accent, used sparingly) */
     --chalk:  0 0% 98%;       /* white */
     --fog:    0 0% 62%;       /* neutral grey text */
     --avail-green: 142 71% 45%;
@@ -141,6 +142,22 @@
     );
   }
 
+  .font-script { font-family: 'Yellowtail', 'Brush Script MT', cursive; letter-spacing: 0; }
+  .brand-script {
+    color: hsl(var(--forest));
+    text-shadow: 0.06em 0.05em 0 #0a0a0a;
+    transform: skewX(-4deg);
+  }
+  .brand-script-dark {
+    color: hsl(var(--fire));
+    text-shadow: 0.06em 0.05em 0 #000;
+  }
+  .text-forest { color: hsl(var(--forest)); }
+  .bg-forest { background-color: hsl(var(--forest)); }
+  .photo-grain::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.75));
+  }
   .text-fog { color: hsl(var(--fog)); }
   .text-chalk { color: hsl(var(--chalk)); }
   .text-fire { color: hsl(var(--fire)); }

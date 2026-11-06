@@ -1,67 +1,104 @@
 import { BUSINESS } from "@/config/business";
 import { AvailabilityCard } from "./AvailabilityCard";
-import heroImage from "@/assets/hero-demo.jpg";
+import heroImage from "@/assets/real/hero-commercial-gut.webp";
+import ownerImage from "@/assets/real/owner-truck-palms.webp";
+import tubAfter from "@/assets/real/tub-after.webp";
+
+const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
 export const Hero = () => (
-  <section className="relative min-h-screen bg-ink flex flex-col items-center justify-center text-center px-6 pt-24 pb-16 overflow-hidden">
+  <section className="relative min-h-[100svh] bg-ink overflow-hidden pt-[76px]">
+    {/* Real job: full commercial gut on Main Street */}
     <img
       src={heroImage}
-      alt="DiAntonio's demolition crew at work on an interior demo"
-      width={1920}
-      height={1080}
-      className="absolute inset-0 w-full h-full object-cover opacity-40"
+      alt="Commercial space fully gutted by DiAntonio's Demo & Hauling"
+      width={1800}
+      height={2039}
+      fetchPriority="high"
+      className="absolute inset-0 w-full h-full object-cover object-center"
     />
-    <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/60 to-ink" />
-    <div className="relative font-eyebrow mb-6">
-      LICENSED &amp; INSURED · {BUSINESS.cityState} &amp; SURROUNDING AREAS
+    <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/30" />
+    <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent" />
+
+    <div className="relative max-w-7xl mx-auto px-6 md:px-10 grid lg:grid-cols-[1.15fr_0.85fr] gap-12 items-center min-h-[calc(100svh-76px)] py-14">
+      <div>
+        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/15 rounded-full px-4 py-1.5">
+          <span className="pulse-dot bg-avail-green" />
+          <span className="font-condensed uppercase text-chalk" style={{ fontSize: 11, letterSpacing: 3, fontWeight: 600 }}>
+            Owner-operated · Licensed &amp; Insured
+          </span>
+        </div>
+
+        <h1 className="font-display mt-6" style={{ lineHeight: 0.88, letterSpacing: "1px" }}>
+          <span className="block text-chalk text-[64px] sm:text-[84px] md:text-[112px]">GUTTED.</span>
+          <span className="block text-chalk text-[64px] sm:text-[84px] md:text-[112px]">HAULED.</span>
+          <span className="block text-fire text-[64px] sm:text-[84px] md:text-[112px]">GONE.</span>
+        </h1>
+
+        <p className="text-[#d6d6d6] mt-6 max-w-[520px]" style={{ fontSize: 18, fontWeight: 400, lineHeight: 1.6 }}>
+          Interior demolition, full cleanouts, junk removal, and moves across the country.
+          You deal with the owner from first call to final sweep.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-3 mt-8 max-w-[560px]">
+          <a
+            href={`tel:${BUSINESS.phoneTel}`}
+            className="group flex-1 bg-fire hover:bg-ember text-white rounded-lg px-6 py-4 flex items-center justify-center gap-3 shadow-[0_14px_40px_-12px_hsl(var(--fire)/0.7)] transition-all hover:-translate-y-0.5"
+          >
+            <span className="text-xl group-hover:rotate-12 transition-transform" aria-hidden>📞</span>
+            <span className="leading-none text-left">
+              <span className="block font-condensed uppercase text-white/80" style={{ fontSize: 10, letterSpacing: 2 }}>
+                Call or text now
+              </span>
+              <span className="block font-display" style={{ fontSize: 26, letterSpacing: 1 }}>{BUSINESS.phone}</span>
+            </span>
+          </a>
+          <button
+            onClick={() => scrollTo("photo-quote")}
+            className="flex-1 border-2 border-white/70 hover:bg-white hover:text-black text-white rounded-lg px-6 py-4 font-display transition-colors"
+            style={{ fontSize: 22, letterSpacing: 1 }}
+          >
+            TEXT A PHOTO → QUOTE
+          </button>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-10 max-w-[520px] border-t border-white/15 pt-6">
+          {[
+            ["Same-day", "Service available"],
+            ["6+ States", "Long-distance moves"],
+            ["Free", "Upfront quotes"],
+          ].map(([big, small]) => (
+            <div key={big}>
+              <div className="font-display text-chalk text-[22px] sm:text-[28px]" style={{ lineHeight: 1 }}>{big}</div>
+              <div className="font-condensed uppercase text-fog mt-1" style={{ fontSize: 11, letterSpacing: 1.5 }}>{small}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="lg:hidden">
+          <AvailabilityCard />
+        </div>
+      </div>
+
+      {/* Desktop photo stack — the real owner + a real result */}
+      <div className="relative hidden lg:block h-[620px]">
+        <figure className="absolute right-0 top-0 w-[78%] h-[480px] rounded-2xl overflow-hidden ring-1 ring-white/20 shadow-2xl rotate-[2deg]">
+          <img src={ownerImage} alt="Owner Corey DiAntonio with the moving truck" className="w-full h-full object-cover" loading="eager" />
+          <figcaption className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 to-transparent p-5">
+            <div className="font-script brand-script-dark" style={{ fontSize: 30 }}>Corey DiAntonio</div>
+            <div className="font-condensed uppercase text-chalk/80" style={{ fontSize: 11, letterSpacing: 2 }}>Owner · On every job</div>
+          </figcaption>
+        </figure>
+        <figure className="absolute left-0 bottom-0 w-[52%] h-[300px] rounded-2xl overflow-hidden ring-4 ring-ink shadow-2xl -rotate-[3deg]">
+          <img src={tubAfter} alt="Bathroom fully demoed and ready for renovation" className="w-full h-full object-cover" loading="eager" />
+          <span className="absolute top-3 left-3 bg-fire text-white font-condensed uppercase rounded px-2.5 py-1" style={{ fontSize: 10, letterSpacing: 2 }}>
+            Bathroom demo · Done
+          </span>
+        </figure>
+        <div className="absolute right-0 bottom-0 w-[280px]">
+          <AvailabilityCard />
+        </div>
+      </div>
     </div>
-
-    <h1 className="relative font-display" style={{ lineHeight: 0.9, letterSpacing: "2px" }}>
-      <span className="block text-chalk text-[80px] md:text-[96px]">WE HAUL.</span>
-      <span className="block text-chalk text-[80px] md:text-[96px]">WE DEMO.</span>
-      <span className="block text-fire text-[80px] md:text-[96px]">WE HANDLE IT.</span>
-    </h1>
-
-    <p className="relative text-fog font-body mt-5 max-w-[480px] mx-auto" style={{ fontSize: 17, fontWeight: 300 }}>
-      Fast, reliable demolition and junk removal. One call and we show up — licensed, insured, and ready to work.
-    </p>
-
-    <a
-      href={`tel:${BUSINESS.phoneTel}`}
-      className="group relative animate-pulse-cta bg-gradient-to-br from-fire to-ember hover:from-ember hover:to-fire text-white font-display flex flex-col items-center justify-center w-full max-w-[360px] mx-auto mt-8 py-5 px-8 rounded-xl shadow-[0_10px_40px_-10px_hsl(var(--fire)/0.6)] ring-1 ring-white/10 hover:ring-white/20 transition-all hover:-translate-y-0.5"
-    >
-      <span className="font-condensed text-white/80 uppercase mb-1" style={{ fontSize: 11, letterSpacing: 3 }}>
-        Tap to call
-      </span>
-      <span className="flex items-center gap-3 whitespace-nowrap" style={{ fontSize: 26 }}>
-        <span className="text-2xl group-hover:rotate-12 transition-transform">📞</span>
-        {BUSINESS.phone}
-      </span>
-    </a>
-
-    <button
-      onClick={() => document.getElementById("quote-form")?.scrollIntoView({ behavior: "smooth" })}
-      className="relative text-fog hover:text-chalk hover:underline mt-3.5"
-      style={{ fontSize: 14 }}
-    >
-      or submit a quote request →
-    </button>
-
-    <div className="relative flex flex-wrap gap-2 justify-center mt-7">
-      {["✓ Licensed", "✓ Insured", "✓ Free Quotes"].map((p) => (
-        <span
-          key={p}
-          className="bg-steel/80 backdrop-blur text-fog font-condensed uppercase"
-          style={{ fontSize: 11, letterSpacing: 1, padding: "6px 14px" }}
-        >
-          {p}
-        </span>
-      ))}
-    </div>
-
-    <div className="relative lg:hidden w-full">
-      <AvailabilityCard />
-    </div>
-    <AvailabilityCard floating />
   </section>
 );

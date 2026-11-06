@@ -7,7 +7,7 @@ const SMS_HREF = `sms:${BUSINESS.phoneTel}?&body=${SMS_BODY}`;
 const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data=${encodeURIComponent(SMS_HREF)}`;
 
 export const PhotoToQuote = () => (
-  <section className="bg-ink px-6 md:px-10 py-20">
+  <section id="photo-quote" className="bg-ink px-6 md:px-10 py-20 scroll-mt-20">
     <div className="max-w-6xl mx-auto">
       <div className="font-eyebrow mb-3">THE EASIEST QUOTE IN THE BUSINESS</div>
       <h2 className="font-display text-chalk text-[40px] md:text-[52px] leading-none">
