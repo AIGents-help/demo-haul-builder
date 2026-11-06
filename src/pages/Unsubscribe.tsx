@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "@/integrations/supabase/client";
 import { SEO } from "@/components/SEO";
 
 const Unsubscribe = () => {
@@ -9,8 +9,8 @@ const Unsubscribe = () => {
 
   useEffect(() => {
     if (!token) { setState("invalid"); return; }
-    const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/handle-email-unsubscribe?token=${encodeURIComponent(token)}`;
-    fetch(url, { headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } })
+    const url = `${SUPABASE_URL}/functions/v1/handle-email-unsubscribe?token=${encodeURIComponent(token)}`;
+    fetch(url, { headers: { apikey: SUPABASE_PUBLISHABLE_KEY } })
       .then((r) => r.json())
       .then((d) => {
         if (d.valid) setState("ready");
