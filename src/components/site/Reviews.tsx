@@ -1,46 +1,49 @@
 import { BUSINESS } from "@/config/business";
-import sarahImg from "@/assets/review-sarah.jpg";
-import jamesImg from "@/assets/review-james.jpg";
-import mikeImg from "@/assets/review-mike.jpg";
 
-const REVIEWS = [
-  { name: "Sarah M.", img: sarahImg, text: "DiAntonio's was at my house within hours of calling. They removed everything quickly, professionally, and left the space spotless. I'll be calling them for every project going forward." },
-  { name: "James R.", img: jamesImg, text: "Great experience start to finish. Fair quote, showed up on time, and got the job done faster than I expected. Highly recommend for anyone needing demo or hauling work." },
-  { name: "Mike T.", img: mikeImg, text: "These guys are the real deal. Licensed, insured, and they actually clean up after themselves. Used them for a full basement cleanout — couldn't be happier." },
-];
+// Paste REAL Google reviews here (copied word-for-word, first name + last initial).
+// The section only shows quotes when this list has entries — no placeholder or invented reviews,
+// which would violate the FTC rule on fake reviews and Google's policies.
+type Review = { name: string; text: string; job?: string };
+const REVIEWS: Review[] = [];
 
 export const Reviews = () => (
-  <section id="reviews" className="bg-ink px-6 md:px-10 py-20">
+  <section id="reviews" className="bg-ink px-6 md:px-10 py-24">
     <div className="max-w-6xl mx-auto">
       <div className="font-eyebrow mb-3">WHAT CUSTOMERS SAY</div>
-      <h2 className="font-display text-chalk text-[40px] md:text-[52px] leading-none">REAL REVIEWS. REAL RESULTS.</h2>
+      <h2 className="font-display text-chalk text-[44px] md:text-[64px] leading-[0.95]">
+        DON'T TAKE OUR WORD FOR IT.
+      </h2>
 
-      <div className="grid md:grid-cols-3 gap-0.5 mt-10">
-        {REVIEWS.map((r) => (
-          <div key={r.name} className="bg-iron p-7 transition-all"
-               style={{ borderTop: "3px solid hsl(var(--steel))" }}
-               onMouseEnter={(e) => (e.currentTarget.style.borderTopColor = "hsl(var(--fire))")}
-               onMouseLeave={(e) => (e.currentTarget.style.borderTopColor = "hsl(var(--steel))")}>
-            <div className="text-gold" style={{ fontSize: 16 }}>⭐⭐⭐⭐⭐</div>
-            <p className="text-fog mt-4 italic" style={{ fontSize: 14, lineHeight: 1.8 }}>"{r.text}"</p>
-            <div className="flex items-center gap-3 mt-5">
-              <img src={r.img} alt={r.name} loading="lazy" width={512} height={512} className="w-11 h-11 object-cover rounded-full" />
-              <div>
+      {REVIEWS.length > 0 && (
+        <div className="grid md:grid-cols-3 gap-6 mt-12">
+          {REVIEWS.map((r) => (
+            <figure key={r.name} className="bg-iron rounded-2xl p-7 ring-1 ring-white/5">
+              <div className="text-gold" style={{ fontSize: 16 }} aria-label="5 stars">★★★★★</div>
+              <blockquote className="text-chalk/90 mt-4" style={{ fontSize: 15, lineHeight: 1.75 }}>"{r.text}"</blockquote>
+              <figcaption className="mt-5">
                 <div className="text-chalk" style={{ fontWeight: 600, fontSize: 14 }}>{r.name}</div>
-                <div style={{ fontSize: 12, color: "#6a6058" }}>— Google Review</div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+                <div className="text-fog" style={{ fontSize: 12 }}>{r.job ? `${r.job} · ` : ""}Google review</div>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      )}
 
-      <div className="text-center mt-8">
+      <div className="mt-12 grid md:grid-cols-[1fr_auto] gap-6 items-center bg-iron rounded-2xl p-8 ring-1 ring-white/5">
+        <div>
+          <div className="text-gold" style={{ fontSize: 22 }} aria-hidden>★★★★★</div>
+          <p className="text-chalk mt-2" style={{ fontSize: 17, fontWeight: 500 }}>
+            Read what real customers say — or leave a review for your job.
+          </p>
+        </div>
         <a
           href={BUSINESS.googleReviewsUrl}
-          className="inline-block border-2 border-fire text-fire hover:bg-fire hover:text-white font-display px-6 py-3 transition-colors"
-          style={{ fontSize: 16 }}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-fire hover:bg-ember text-white font-display rounded-lg px-7 py-4 text-center transition-colors"
+          style={{ fontSize: 20, letterSpacing: 1 }}
         >
-          SEE ALL REVIEWS ON GOOGLE →
+          GOOGLE REVIEWS →
         </a>
       </div>
     </div>

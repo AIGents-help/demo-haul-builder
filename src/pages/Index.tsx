@@ -8,6 +8,8 @@ import { WhyUs } from "@/components/site/WhyUs";
 import { BeforeAfter } from "@/components/site/BeforeAfter";
 import { Reviews } from "@/components/site/Reviews";
 import { RecentJobs } from "@/components/site/RecentJobs";
+import { Owner } from "@/components/site/Owner";
+import { LongDistance } from "@/components/site/LongDistance";
 import { QuoteForm } from "@/components/site/QuoteForm";
 import { ServiceArea } from "@/components/site/ServiceArea";
 import { Footer } from "@/components/site/Footer";
@@ -17,21 +19,23 @@ import { SEO } from "@/components/SEO";
 const Index = () => (
   <div className="bg-ink min-h-screen">
     <SEO
-      title="DiAntonio's Demo & Hauling — Demolition & Junk Removal"
-      description="Licensed & insured demolition, junk removal, and hauling in Greater Philadelphia. Same-day service available. Free quote — call (484) 378-6039."
+      title="DiAntonio's Demo & Hauling — Demolition, Cleanouts & Moving"
+      description="Owner-operated demolition, junk removal, cleanouts, and long-distance moving. Licensed & insured. Same-day service available. Free quote — call or text (484) 378-6039."
       path="/"
     />
     <Header />
     <main>
       <Hero />
       <PromiseBanner />
-      <PhotoToQuote />
       <Services />
+      <RecentJobs />
+      <BeforeAfter />
+      <Owner />
+      <LongDistance />
+      <PhotoToQuote />
       <Calculator />
       <WhyUs />
-      <BeforeAfter />
       <Reviews />
-      <RecentJobs />
       <QuoteForm />
       <ServiceArea />
     </main>

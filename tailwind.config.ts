@@ -25,6 +25,7 @@ export default {
         fire: "hsl(var(--fire))",
         ember: "hsl(var(--ember))",
         gold: "hsl(var(--gold))",
+        forest: "hsl(var(--forest))",
         chalk: "hsl(var(--chalk))",
         fog: "hsl(var(--fog))",
         "avail-green": "hsl(var(--avail-green))",
@@ -72,6 +73,7 @@ export default {
         display: ['"Bebas Neue"', 'Impact', 'sans-serif'],
         body: ['"Barlow"', 'system-ui', 'sans-serif'],
         condensed: ['"Barlow Condensed"', 'sans-serif'],
+        script: ['"Yellowtail"', 'cursive'],
       },
       borderRadius: {
         lg: "var(--radius)",
