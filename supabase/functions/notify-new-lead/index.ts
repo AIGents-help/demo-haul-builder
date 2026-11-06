@@ -5,7 +5,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const NOTIFY_EMAIL = Deno.env.get("NOTIFY_EMAIL") ?? "coreydiantonio18@icloud.com";
-const FROM = Deno.env.get("NOTIFY_FROM") ?? "DiAntonio's Website <leads@diantoniosdemo.com>";
+const FROM = Deno.env.get("NOTIFY_FROM") ?? "DiAntonio's Website Leads <leads@aigents.help>";
 
 const esc = (s: unknown) =>
   String(s ?? "—").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
