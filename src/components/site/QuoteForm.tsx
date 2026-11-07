@@ -50,15 +50,7 @@ export const QuoteForm = () => {
       ]);
       if (dbError) throw dbError;
 
-      try {
-        await supabase.functions.invoke("send-transactional-email", {
-          body: {
-            templateName: "quote-request",
-            recipientEmail: "coreydiantonio18@icloud.com",
-            templateData: { ...parsed.data, source: "website" },
-          },
-        });
-      } catch (_) { /* notification optional */ }
+      // Corey is emailed automatically by the database (notify-new-lead).
 
       setSubmitted(true);
     } catch (err) {

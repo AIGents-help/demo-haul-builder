@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
+export const SUPABASE_URL = 'https://losvrrrhhwgfcmfgfyze.supabase.co';
+export const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_V5L3nUgImSuwBYJnBNuc9A_bNHF1VmC';
+
 export const supabase = createClient<Database>(
-  'https://vcfksbpioimlqmvkrtwb.supabase.co',
-  'sb_publishable_bXlF8-82IEMjYc2qzthnfQ_PmxZxsPt',
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY,
   {
     auth: {
       storage: localStorage,
